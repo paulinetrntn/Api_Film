@@ -3,41 +3,84 @@
 namespace App\Controller;
 
 use App\Entity\Movie;
+use App\Entity\Actor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MovieController extends AbstractController {
 
-    #[Route('/')]
-    public function getMovies(SerializerInterface $serializer): Response
+    public function __construct( private  HttpClientInterface $tmbdClient){
+    }
+
+    #[Route('/all')]
+    public function getAllMovies(): Response
     {
-        $client = HttpClient::create();
-        $apiUrl = 'https://api.themoviedb.org/3/movie/popular';
-        $response = $client->request('GET', $apiUrl, [
-            'headers' => [
-                'Authorization' => 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiOTZjOTdmMzUyYzMxYTdhM2QyNjM4OWNlM2Q1ZDBiYyIsInN1YiI6IjY1MGE5ZmNkOTY2MWZjMDFlNmRhMmE3ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.6Mw5oUTKiAEuR98piyoxob9_kjoyd_fSGqMTaFGTRGo',
-                'accept' => 'application/json',
-            ],
-        ]);
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/popular?language=fr-FR&page=1'
+        );
+
+        return new Response($response->getContent());
+    }
+
+
+    #[Route('/popular')]
+    public function getPopularMovies(): Response
+    {
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/popular?language=fr-FR&page=1'
+        );
+
+            $apiMovies = $response->toArray()['results'];
+            $movies = [];
+
+            foreach ($apiMovies as $apiMovie) {
+                $movie = new Movie();
+                $movie->setTitle($apiMovie['title']);
+                $movie->setLanguage($apiMovie['original_language']);
+                $movie->setImage('https://image.tmdb.org/t/p/original'.$apiMovie['poster_path']);
+                $movie->setReleaseDate(new \DateTime($apiMovie['release_date']));
+                $movie->setSynopsis($apiMovie['overview']);
+                $movie->setIsAdult($apiMovie['adult']);
+                $movie->setNote($apiMovie['vote_average']);
+                $movies[] = $movie;
+            }
+
+            return $this->render('movie.html.twig',[
+                'movies'=>$movies
+            ]);
+
         //return new Response($response->getContent());
 
+    }
 
-        $moviesData = $response->toArray();
-        $movies = [];
+    #[Route('/movie/{id}')]
+    public function getMoviesById(int $id): Response
+    {
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/'.$id.'/credits?language=en-FR'
+        );
+        $apiMovies = $response->toArray()['cast'];
+        $actors = [];
 
-        foreach ($moviesData['results'] as $movieData) {
-            $movie = $serializer->deserialize(json_encode($movieData), Movie::class, 'json');
-            $movies[] = $movie;
+        foreach ($apiMovies as $apiMovie) {
+            $actor = new Actor();
+            $actor->setId($apiMovie['id']);
+            $actor->setLastname($apiMovie['original_name']);
+            $actor->setGender($apiMovie['gender']);
+            $actor->setBiography($apiMovie['known_for_department']);
+
+            $actors[] = $actor;
         }
-
-        // Vous pouvez maintenant utiliser le tableau $movies qui contient les films récupérés
-        // ...
-
-        return $this->render('movie/index.html.twig', [
-            'movies' => $movies,
+        return $this->render('actor.html.twig',[
+            'actors'=>$actors
         ]);
+
+        //return new Response($response->getContent());
     }
 }

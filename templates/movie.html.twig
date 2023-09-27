@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="text-center m-5 ">Liste des films : </h1>
+    <div class="row">
+        {% for movie in movies %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ movie.image}}" class="card-img-top img-fluid" alt="{{ movie.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">{{ movie.title }}</h5>
+                        <p class="card-text">{{ movie.synopsis }}</p>
+                        <p class="card-text"><small class="text-muted">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
+                        <p class="card-text">Langue : {{ movie.language }}</p>
+                        <p class="card-text">Langue :
+                            <small class="text-muted">
+                                {% if movie.language == "en" %}
+                                    Anglais
+                                {% elseif movie.language == "pl" %}
+                                    Polonais
+                                {% else %}
+                                    Français
+                                {% endif %}
+                            </small>
+                        <p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                {% if movie.isAdult == true %}
+                                    Ce film est pour adultes.
+                                {% else %}
+                                    Ce film est adapté à tous les publics.
+                                {% endif %}
+                            </small>
+                        <p>
+                        <p class="card-text">Note du film : {{ movie.note }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+

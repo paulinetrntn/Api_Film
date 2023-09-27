@@ -207,4 +207,21 @@ class Serie {
         return $this;
     }
 
+    public function addActor(Actor $actor): static
+    {
+        if($this->actors->contains($actor)){
+            $this->actors->add($actor);
+            $actor->addMovie($this);
+        }
+        return $this;
+    }
+
+    public function removeActor(Actor $actor): static
+    {
+        if($this->actors->removeElement($actor)){
+            $actor->removeMovie($this);
+        }
+        return $this;
+    }
+
 }

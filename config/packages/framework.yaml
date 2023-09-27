@@ -12,7 +12,13 @@ framework:
         cookie_secure: auto
         cookie_samesite: lax
         storage_factory_id: session.storage.factory.native
-
+    http_client:
+        scoped_clients:
+            tmbdClient:
+                base_uri: 'https://api.themoviedb.org'
+                auth_bearer: eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YjYwOWQ5YWQzZThkODZhYzBlNWRiODhlNDhjZWRkOSIsInN1YiI6IjY1MGE5ZmU1ODFjN2JlMDBlMzE0OGJmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KsMRU4kOv1IESaxd8bzz3noK6Sl03EJKhFiFVd6iyqM
+                headers:
+                    Accept: 'application/json'
     #esi: true
     #fragments: true
     php_errors:

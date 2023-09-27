@@ -7,42 +7,23 @@ use phpDocumentor\Reflection\Types\Boolean;
 
 
 class Movie {
+
     private ?int $id;
     private ?string $title;
     private ?string $image;
-    private ?string $video;
+    private ?bool $isVideo;
     private ?string $language;
-    private ?boolean $isAdult;
-    private ?DateTime $realeaseDate;
-
-    /**
-     * @param int|null $id
-     * @param string|null $title
-     * @param string|null $image
-     * @param string|null $video
-     * @param string|null $language
-     * @param bool|null $isAdult
-     * @param DateTime|null $realeaseDate
-     */
-    public function __construct(?int $id, ?string $title, ?string $image, ?string $video, ?string $language, ?bool $isAdult, ?DateTime $realeaseDate)
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->image = $image;
-        $this->video = $video;
-        $this->language = $language;
-        $this->isAdult = $isAdult;
-        $this->realeaseDate = $realeaseDate;
-    }
+    private ?bool $isAdult;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): Movie
     {
         $this->id = $id;
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -50,9 +31,10 @@ class Movie {
         return $this->title;
     }
 
-    public function setTitle(?string $title): void
+    public function setTitle(?string $title): Movie
     {
         $this->title = $title;
+        return $this;
     }
 
     public function getImage(): ?string
@@ -60,19 +42,21 @@ class Movie {
         return $this->image;
     }
 
-    public function setImage(?string $image): void
+    public function setImage(?string $image): Movie
     {
         $this->image = $image;
+        return $this;
     }
 
-    public function getVideo(): ?string
+    public function getIsVideo(): ?bool
     {
-        return $this->video;
+        return $this->isVideo;
     }
 
-    public function setVideo(?string $video): void
+    public function setIsVideo(?bool $isVideo): Movie
     {
-        $this->video = $video;
+        $this->isVideo = $isVideo;
+        return $this;
     }
 
     public function getLanguage(): ?string
@@ -80,9 +64,10 @@ class Movie {
         return $this->language;
     }
 
-    public function setLanguage(?string $language): void
+    public function setLanguage(?string $language): Movie
     {
         $this->language = $language;
+        return $this;
     }
 
     public function getIsAdult(): ?bool
@@ -90,21 +75,53 @@ class Movie {
         return $this->isAdult;
     }
 
-    public function setIsAdult(?bool $isAdult): void
+    public function setIsAdult(?bool $isAdult): Movie
     {
         $this->isAdult = $isAdult;
+        return $this;
     }
 
-    public function getRealeaseDate(): ?DateTime
+    public function getReleaseDate(): ?DateTime
     {
-        return $this->realeaseDate;
+        return $this->releaseDate;
     }
 
-    public function setRealeaseDate(?DateTime $realeaseDate): void
+    public function setReleaseDate(?DateTime $releaseDate): Movie
     {
-        $this->realeaseDate = $realeaseDate;
+        $this->releaseDate = $releaseDate;
+        return $this;
     }
 
+    public function getNote(): ?int
+    {
+        return $this->note;
+    }
+
+    public function setNote(?int $note): Movie
+    {
+        $this->note = $note;
+        return $this;
+    }
+
+    public function getSynopsis(): ?string
+    {
+        return $this->synopsis;
+    }
+
+    public function setSynopsis(?string $synopsis): Movie
+    {
+        $this->synopsis = $synopsis;
+        return $this;
+    }
+    private ?DateTime $releaseDate;
+    private ?int $note;
+    private ?String $synopsis;
+
+
+    public function __construct()
+    {
+
+    }
 
 
 }
