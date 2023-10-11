@@ -18,6 +18,17 @@ class MovieController extends AbstractController{
 
     public function __construct( private  HttpClientInterface $tmbdClient){
     }
+
+    #[Route('/all')]
+    public function getAllMovies(): Response
+    {
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/popular?language=fr-FR&page=1'
+        );
+
+        return new Response($response->getContent());
+    }
     #[Route('/popular')]
     public function getMovies(): Response
     {
@@ -99,23 +110,6 @@ class MovieController extends AbstractController{
 
 
 /*
-class MovieController extends AbstractController {
-
-    public function __construct( private  HttpClientInterface $tmbdClient){
-    }
-
-    #[Route('/all')]
-    public function getAllMovies(): Response
-    {
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/popular?language=fr-FR&page=1'
-        );
-
-        return new Response($response->getContent());
-    }
-
-
     #[Route('/popular')]
     public function getPopularMovies(): Response
     {
@@ -123,10 +117,8 @@ class MovieController extends AbstractController {
             'GET',
             '/3/movie/popular?language=fr-FR&page=1'
         );
-
             $apiMovies = $response->toArray()['results'];
             $movies = [];
-
             foreach ($apiMovies as $apiMovie) {
                 $movie = new Movie();
                 $movie->setTitle($apiMovie['title']);
@@ -138,7 +130,6 @@ class MovieController extends AbstractController {
                 $movie->setNote($apiMovie['vote_average']);
                 $movies[] = $movie;
             }
-
         $actors = $this->getActors($apiMovie["id"]);
         foreach ($actors as $actor) {
             $movie->addActor($actor);
@@ -147,83 +138,6 @@ class MovieController extends AbstractController {
             return $this->render('movie.html.twig',[
                 'movies'=>$movies
             ]);
-
         //return new Response($response->getContent());
-
     }
-*/
-    /*#[Route('/movie/{id}')]
-    public function getMoviesById(int $id): Response
-    {
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/'.$id.'/credits?language=en-FR'
-        );
-        $apiMovies = $response->toArray()['cast'];
-        $actors = [];
-
-        foreach ($apiMovies as $apiMovie) {
-            $actor = new Actor();
-            $actor->setId($apiMovie['id']);
-            $actor->setLastname($apiMovie['original_name']);
-            $actor->setGender($apiMovie['gender']);
-            $actor->setBiography($apiMovie['known_for_department']);
-
-            $actors[] = $actor;
-        }
-        return $this->render('details2.html.twig',[
-            'actors'=>$actors
-        ]);
-
-    }
-    */
-/*
-    #[Route('/movie/{id}')]
-    public function getMoviesById(int $id): Response
-    {
-        $actors=[];//tableau des films
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/'.$id.'/credits?language=en-FR'
-        );
-        $movieData = json_decode($response->getContent(), true);//contenue du json
-
-        if (isset($movieData) && is_array($movieData)) {
-            $releaseDate=new \DateTime($movieData['release_date']);
-            $picturePath='https://image.tmdb.org/t/p/original'.$movieData["belongs_to_collection"]["poster_path"];
-            $movie = new Movie($movieData["id"], $movieData["title"], $picturePath, $movieData["video"],$movieData["overview"], $movieData["original_language"], $movieData["adult"], $releaseDate, $movieData["vote_average"]);
-            $actors=$this->getActors($movieData["id"]);
-
-            foreach ($actors as $actor){
-                $movie->addActor($actor);
-            }
-            return $this->render('details.html.twig', [
-                'movie' => $movie
-            ]);
-        }
-        return new Response($response->getContent());
-
-    }
-
-    public function getActors(int $id)
-    {
-        $actors=[];//tableau des films
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/'.$id.'/credits?language=en-FR'
-        );
-        $data = json_decode($response->getContent(), true);
-        if (isset($data['cast']) && is_array($data['cast'])) {
-            foreach ($data['cast'] as $actorData) {
-                $actor = new Actor($actorData["id"], $actorData["gender"],$actorData["name"]);
-                // $movie->addActor($actor); //A AJOUTER PLUS TARD
-                $actors[] = $actor;
-            }
-        }
-        return $actors;
-    }
-
-
-
-}
 */
