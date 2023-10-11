@@ -1,28 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1 class="text-center m-5 ">Liste des films : </h1>
+    <h1 class="text-center m-5 text-white">Liste des films : </h1>
     <div class="row">
         {% for movie in movies %}
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="{{ movie.image}}" class="card-img-top img-fluid" alt="{{ movie.title }}">
+                <div class="card" style="height: 850px;margin: 30px;">
+                    <img src="{{ movie.picturePath }}" class="card-img-top img-fluid img-thumbnail" alt="{{ movie.title }}" style="height: 50%;">
                     <div class="card-body">
                         <h5 class="card-title text-center">{{ movie.title }}</h5>
-                        <p class="card-text">{{ movie.synopsis }}</p>
-                        <p class="card-text"><small class="text-muted">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
-                        <p class="card-text">Langue : {{ movie.language }}</p>
+                        <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
+                        <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
                         <p class="card-text">Langue :
-                            <small class="text-muted">
-                                {% if movie.language == "en" %}
+                            <small class="">
+                                {% if movie.originalLanguage == "en" %}
                                     Anglais
-                                {% elseif movie.language == "pl" %}
+                                {% elseif movie.originalLanguage == "pl" %}
                                     Polonais
                                 {% else %}
                                     Français
                                 {% endif %}
                             </small>
-                        <p>
+                        </p>
+                        <p class="card-text">
+                            Note : {{ movie.voteAverage }}/10
+
+                            {% set numberOfStars = movie.voteAverage|round %}
+                            {% set numberOfEmptyStars = 10 - numberOfStars %}
+
+                            {% for i in 1..numberOfStars %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% endfor %}
+
+                            {% for i in 1..numberOfEmptyStars %}
+                                <i class="far fa-star text-warning"></i>
+                            {% endfor %}
+                        </p>
                         <p class="card-text">
                             <small class="text-muted">
                                 {% if movie.isAdult == true %}
@@ -31,13 +44,16 @@
                                     Ce film est adapté à tous les publics.
                                 {% endif %}
                             </small>
-                        <p>
-                        <p class="card-text">Note du film : {{ movie.note }}</p>
+                        </p>
+                        <h3>Acteur :</h3>
+                        <ul>
+                            {% for actor in movie.actors %}
+                                {{ actor.name }},
+                            {% endfor %}
+                        </ul>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 {% endblock %}
-
-

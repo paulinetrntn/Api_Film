@@ -4,20 +4,23 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping\Entity;
 use phpDocumentor\Reflection\Types\Boolean;
+use Doctrine\Common\Collections\ArrayCollection;
 
 
 class Actor {
 
     private ?int $id;
-    private ?string $firstname;
-    private ?string $lastname;
+    private ?string $name;
     private ?string $gender;
     private ?string $biography;
 
 
-    public function __construct()
+    public function __construct($id, $gender, $name)
     {
-
+        $this->id = $id;
+        $this->gender = $gender;
+        $this->name = $name;
+        $this->movies = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -30,24 +33,14 @@ class Actor {
         $this->id = $id;
     }
 
-    public function getFirstname(): ?string
+    public function getName(): ?string
     {
-        return $this->firstname;
+        return $this->name;
     }
 
-    public function setFirstname(?string $firstname): void
+    public function setName(?string $name): void
     {
-        $this->firstname = $firstname;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(?string $lastname): void
-    {
-        $this->lastname = $lastname;
+        $this->name = $name;
     }
 
     public function getGender(): ?string
@@ -69,6 +62,7 @@ class Actor {
     {
         $this->biography = $biography;
     }
+
 
 
 }

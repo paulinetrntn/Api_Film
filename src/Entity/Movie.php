@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\Entity;
 use phpDocumentor\Reflection\Types\Boolean;
 
@@ -10,10 +11,39 @@ class Movie {
 
     private ?int $id;
     private ?string $title;
-    private ?string $image;
+    private ?string $picturePath;
     private ?bool $isVideo;
-    private ?string $language;
+    private ?string $originalLanguage;
     private ?bool $isAdult;
+    private ?DateTime $releaseDate;
+    private ?int $voteAverage;
+    private ?String $overview;
+
+
+    public function __construct($id, $title, $picturePath, $isVideo, $overview, $originalLanguage, $isAdult, $releaseDate, $voteAverage)
+    {
+        $this->id = $id;
+        $this->title = $title;
+        $this->picturePath = $picturePath;
+        $this->isVideo = $isVideo;
+        $this->overview = $overview;
+        $this->originalLanguage = $originalLanguage;
+        $this->isAdult = $isAdult;
+        $this->releaseDate = $releaseDate;
+        $this->voteAverage = $voteAverage;
+        $this->actors = new ArrayCollection();
+    }
+
+    public function getActors(): ArrayCollection
+    {
+        return $this->actors;
+    }
+
+    public function setActors(ArrayCollection $actors): Movie
+    {
+        $this->actors = $actors;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -37,14 +67,14 @@ class Movie {
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getPicturePath(): ?string
     {
-        return $this->image;
+        return $this->picturePath;
     }
 
-    public function setImage(?string $image): Movie
+    public function setPicturePath(?string $picturePath): Movie
     {
-        $this->image = $image;
+        $this->picturePath = $picturePath;
         return $this;
     }
 
@@ -59,14 +89,14 @@ class Movie {
         return $this;
     }
 
-    public function getLanguage(): ?string
+    public function getOriginalLanguage(): ?string
     {
-        return $this->language;
+        return $this->originalLanguage;
     }
 
-    public function setLanguage(?string $language): Movie
+    public function setOriginalLanguage(?string $originalLanguage): Movie
     {
-        $this->language = $language;
+        $this->originalLanguage = $originalLanguage;
         return $this;
     }
 
@@ -92,36 +122,42 @@ class Movie {
         return $this;
     }
 
-    public function getNote(): ?int
+    public function getVoteAverage(): ?int
     {
-        return $this->note;
+        return $this->voteAverage;
     }
 
-    public function setNote(?int $note): Movie
+    public function setVoteAverage(?int $voteAverage): Movie
     {
-        $this->note = $note;
+        $this->voteAverage = $voteAverage;
         return $this;
     }
 
-    public function getSynopsis(): ?string
+    public function getOverview(): ?string
     {
-        return $this->synopsis;
+        return $this->overview;
     }
 
-    public function setSynopsis(?string $synopsis): Movie
+    public function setOverview(?string $overview): Movie
     {
-        $this->synopsis = $synopsis;
+        $this->overview = $overview;
         return $this;
     }
-    private ?DateTime $releaseDate;
-    private ?int $note;
-    private ?String $synopsis;
 
 
-    public function __construct()
-    {
-
+    public function addActor(Actor $actor):static{
+        if(!$this->actors->contains($actor)){
+            $this->actors->add($actor);
+            //$actor->addMovie($this);
+        }
+        return $this;
     }
 
+    public function removeActor(Actor $actor):static{
+        if(!$this->actors->removeElement($actor)){
+            //$actor->removeMovie($this);
+        }
+        return $this;
+    }
 
 }
