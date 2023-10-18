@@ -98,7 +98,7 @@ class MovieController extends AbstractController{
         if (isset($data['cast']) && is_array($data['cast'])) {
             foreach ($data['cast'] as $actorData) {
                 // Initialise les propriétés de Actor selon les données JSON
-                $actor = new Actor($actorData["id"], $actorData["gender"],$actorData["name"],$actorData["character"]);
+                $actor = new Actor($actorData["id"], $actorData["gender"], "https://image.tmdb.org/t/p/original" . $actorData["profile_path"],$actorData["name"]);
                 // $movie->addActor($actor); //A AJOUTER PLUS TARD
                 //rajoute l'acteur à la liste des acteurs
                 $actors[] = $actor;
@@ -118,7 +118,7 @@ class MovieController extends AbstractController{
         if (isset($data['cast']) && is_array($data['cast'])) {
             foreach ($data['cast'] as $actorData) {
                 // Initialise les propriétés de Actor selon les données JSON
-                $actor = new Actor($actorData["id"], $actorData["gender"],$actorData["name"],$actorData["character"]);
+                $actor = new Actor($actorData["id"], $actorData["gender"], "https://image.tmdb.org/t/p/original" . $actorData["profile_path"],$actorData["name"],$actorData["character"]);
                 // $movie->addActor($actor); //A AJOUTER PLUS TARD
                 //rajoute l'acteur à la liste des acteurs
                 $actors[] = $actor;

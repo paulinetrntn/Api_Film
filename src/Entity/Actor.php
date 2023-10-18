@@ -11,16 +11,40 @@ class Actor {
 
     private ?int $id;
     private ?string $name;
+    private ?string $urlPicture;
     private ?string $gender;
     private ?string $biography;
 
 
-    public function __construct($id, $gender, $name)
+    public function __construct($id, $gender, $urlPicture, $name)
     {
         $this->id = $id;
         $this->gender = $gender;
         $this->name = $name;
+        $this->urlPicture = $urlPicture;
         $this->movies = new ArrayCollection();
+    }
+
+    public function getUrlPicture(): ?string
+    {
+        return $this->urlPicture;
+    }
+
+    public function setUrlPicture(?string $urlPicture): Actor
+    {
+        $this->urlPicture = $urlPicture;
+        return $this;
+    }
+
+    public function getMovies(): ArrayCollection
+    {
+        return $this->movies;
+    }
+
+    public function setMovies(ArrayCollection $movies): Actor
+    {
+        $this->movies = $movies;
+        return $this;
     }
 
     public function getId(): ?int

@@ -54,6 +54,7 @@
                             <h3>Acteur :</h3>
                             <ul>
                                 {% for actor in actors %}
+                                    <img src="{{ actor.urlPicture }}">
                                     <li>{{ actor.name }} - {{ actor.gender }}</li>
                                 {% endfor %}
                             </ul>
