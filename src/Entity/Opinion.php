@@ -9,23 +9,49 @@ use phpDocumentor\Reflection\Types\Boolean;
 class Opinion
 {
     private ?int $id;
-    private ?int $note;
-    private ?string $comment;
+    private ?int $rating;
+    private ?string $content;
     private ?string $username;
+    private ?string $avatarPath;
 
     /**
      * @param int|null $id
-     * @param int|null $note
-     * @param string|null $comment
+     * @param int|null $rating
+     * @param string|null $content
      * @param string|null $username
+     * @param string|null $avatarPath
      */
-    public function __construct(?int $id, ?int $note, ?string $comment, ?string $username)
+    public function __construct(?int $id, ?int $rating, ?string $content, ?string $username,?string $avatarPath)
     {
         $this->id = $id;
-        $this->note = $note;
-        $this->comment = $comment;
+        $this->rating = $rating;
+        $this->content = $content;
         $this->username = $username;
+        $this->avatarPath = $avatarPath;
     }
+
+    public function getRating(): ?int
+    {
+        return $this->rating;
+    }
+
+    public function setRating(?int $rating): Opinion
+    {
+        $this->rating = $rating;
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): Opinion
+    {
+        $this->content = $content;
+        return $this;
+    }
+
 
     public function getId(): ?int
     {
@@ -37,25 +63,6 @@ class Opinion
         $this->id = $id;
     }
 
-    public function getNote(): ?int
-    {
-        return $this->note;
-    }
-
-    public function setNote(?int $note): void
-    {
-        $this->note = $note;
-    }
-
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    public function setComment(?string $comment): void
-    {
-        $this->comment = $comment;
-    }
 
     public function getUsername(): ?string
     {
@@ -68,6 +75,15 @@ class Opinion
     }
 
 
+    public function getAvatarPath(): ?string
+    {
+        return $this->avatarPath;
+    }
 
+    public function setAvatarPath(?string $avatarPath): Opinion
+    {
+        $this->avatarPath = $avatarPath;
+        return $this;
+    }
 
 }

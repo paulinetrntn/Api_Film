@@ -14,7 +14,6 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ movie.title }}</h5>
-                            <p class="card-text">Avis : </p>
                             <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
                             <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
                             <p class="card-text">Langue :
@@ -56,6 +55,13 @@
                                 {% for actor in actors %}
                                     <img src="{{ actor.urlPicture }}">
                                     <li>{{ actor.name }} - {{ actor.gender }}</li>
+                                {% endfor %}
+                            </ul>
+                            <h3>Avis :</h3>
+                            <ul>
+                                {% for opinion in opinions %}
+                                    <img src="{{ opinion.avatarPath }}">
+                                    <li>{{ opinion.username }} - {{ opinion.rating }} - {{ opinion.content }}</li>
                                 {% endfor %}
                             </ul>
                         </div>

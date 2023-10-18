@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Movie;
 use App\Entity\Actor;
 use App\Entity\Favorite;
+use App\Entity\Opinion;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +66,7 @@ class MovieController extends AbstractController{
     #[Route('/{id}')]
     public function getCredits(int $id) :Response{
         $actors=[];//tableau des films
+        $opinions=[];
 
         $response = $this->tmbdClient->request(
             'GET',
@@ -74,10 +76,10 @@ class MovieController extends AbstractController{
         $movieData = json_decode($response->getContent(), true);//contenue du json
         if (isset($movieData) && is_array($movieData)) {
             $releaseDate = new \DateTime($movieData['release_date']);
-            //$picturePath = 'https://image.tmdb.org/t/p/original' . $movieData["belongs_to_collection"]["poster_path"];
             $picturePath = 'https://image.tmdb.org/t/p/original' . ($movieData["poster_path"] ?? '');
             $movie = new Movie($movieData["id"], $movieData["title"], $picturePath, $movieData["video"], $movieData["overview"], $movieData["original_language"], $movieData["adult"], $releaseDate, $movieData["vote_average"]);
             $actors = $this->getActors($movieData["id"]);
+            $opinions = $this->getAvis($movieData["id"]);
 
             foreach ($actors as $actor) {
                 $movie->addActor($actor);
@@ -86,6 +88,7 @@ class MovieController extends AbstractController{
         return $this->render('details.html.twig', [
             'actors' => $actors,
             'movie' => $movie,
+            'opinions' => $opinions,
         ]);
     }
     public function getActors(int $id){
@@ -109,23 +112,30 @@ class MovieController extends AbstractController{
 
     //dans Movies/reviews
     public function getAvis(int $id){
-        $avis=[];
+        $opinions=[];
         $response = $this->tmbdClient->request(
             'GET',
             '/3/movie/'.$id.'/reviews'
         );
-        $data = json_decode($response->getContent(), true);//contenue du json
-        if (isset($data['cast']) && is_array($data['cast'])) {
-            foreach ($data['cast'] as $actorData) {
-                // Initialise les propriétés de Actor selon les données JSON
-                $actor = new Actor($actorData["id"], $actorData["gender"], "https://image.tmdb.org/t/p/original" . $actorData["profile_path"],$actorData["name"],$actorData["character"]);
-                // $movie->addActor($actor); //A AJOUTER PLUS TARD
-                //rajoute l'acteur à la liste des acteurs
-                $actors[] = $actor;
+        $data = json_decode($response->getContent(), true);
+
+        if (isset($data['results']) && is_array($data['results'])) {
+            foreach ($data['results'] as $opinionData) {
+                $authorDetails = $opinionData["author_details"];
+                $opinion = new Opinion(
+                    (int)$opinionData["id"],
+                    $authorDetails["rating"],
+                    $opinionData["content"],
+                    $authorDetails["username"],
+                    "https://image.tmdb.org/t/p/original" .$authorDetails["avatar_path"]
+                );
+                $opinions[] = $opinion;
             }
         }
-        return $avis;
+
+        return $opinions;
     }
+
 
 
 
