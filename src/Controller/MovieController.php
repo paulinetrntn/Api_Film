@@ -61,7 +61,6 @@ class MovieController extends AbstractController{
         return $this->render('movie.html.twig', [
             'movies' => $movies
         ]);
-        return new Response($response->getContent());
     }
     #[Route('/{id}')]
     public function getCredits(int $id) :Response{
@@ -85,23 +84,27 @@ class MovieController extends AbstractController{
                 $movie->addActor($actor);
             }
         }
-        return $this->render('details.html.twig', [
+        return $this->render('detailsMovie.html.twig', [
             'actors' => $actors,
             'movie' => $movie,
             'opinions' => $opinions,
         ]);
     }
-    public function getActors(int $id){
-        $actors=[];//tableau des films
+    public function getActors(int $id): array
+    {
+        $actors=[];
         $response = $this->tmbdClient->request(
             'GET',
             '/3/movie/'.$id.'/credits'
         );
-        $data = json_decode($response->getContent(), true);//contenue du json
+        $data = json_decode($response->getContent(), true);
         if (isset($data['cast']) && is_array($data['cast'])) {
             foreach ($data['cast'] as $actorData) {
-                // Initialise les propriétés de Actor selon les données JSON
-                $actor = new Actor($actorData["id"], $actorData["gender"], "https://image.tmdb.org/t/p/original" . $actorData["profile_path"],$actorData["name"]);
+                $actor = new Actor(
+                    $actorData["id"],
+                    $actorData["gender"],
+                    "https://image.tmdb.org/t/p/original" . $actorData["profile_path"],
+                    $actorData["name"]);
                 // $movie->addActor($actor); //A AJOUTER PLUS TARD
                 //rajoute l'acteur à la liste des acteurs
                 $actors[] = $actor;
@@ -111,7 +114,8 @@ class MovieController extends AbstractController{
     }
 
     //dans Movies/reviews
-    public function getAvis(int $id){
+    public function getAvis(int $id): array
+    {
         $opinions=[];
         $response = $this->tmbdClient->request(
             'GET',

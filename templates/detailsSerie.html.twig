@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-6 ">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-12">
+                        <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{ serie.name }}</h5>
+                            <p class="card-text text-justify text-sm">{{ serie.overview }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
