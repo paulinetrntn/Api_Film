@@ -41,13 +41,7 @@ class Serie {
      * @param bool|null $isAdult
      */
 
-    public function __construct(){
-        $this->theme = new ArrayCollection();
-        $this->actor = new ArrayCollection();
-        $this->opinion = new ArrayCollection();
-    }
-
-    public function ___construct(?int $id, ?string $name, ?int $nbSeason, ?string $language, ?int $nbEpisodes, ?int $nbRates, ?string $country, ?string $image, ?string $realisation, ?string $publicationDate, ?string $status, ?bool $isAdult)
+    public function __construct(?int $id, ?string $name, ?int $nbSeason, ?string $language, ?int $nbEpisodes, ?int $nbRates, ?string $country, ?string $image, ?string $realisation, ?string $publicationDate, ?string $status, ?bool $isAdult)
     {
         $this->id = $id;
         $this->name = $name;
@@ -61,6 +55,9 @@ class Serie {
         $this->publicationDate = $publicationDate;
         $this->status = $status;
         $this->isAdult = $isAdult;
+        $this->theme = new ArrayCollection();
+        $this->actor = new ArrayCollection();
+        $this->opinion = new ArrayCollection();
     }
 
     public function getId(): ?int

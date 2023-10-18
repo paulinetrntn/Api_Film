@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Movie;
 use App\Entity\Actor;
+use App\Entity\Favorite;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -104,6 +106,51 @@ class MovieController extends AbstractController{
         }
         return $actors;
     }
+
+    //dans Movies/reviews
+    public function getAvis(int $id){
+        $avis=[];
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/'.$id.'/reviews'
+        );
+        $data = json_decode($response->getContent(), true);//contenue du json
+        if (isset($data['cast']) && is_array($data['cast'])) {
+            foreach ($data['cast'] as $actorData) {
+                // Initialise les propriétés de Actor selon les données JSON
+                $actor = new Actor($actorData["id"], $actorData["gender"],$actorData["name"],$actorData["character"]);
+                // $movie->addActor($actor); //A AJOUTER PLUS TARD
+                //rajoute l'acteur à la liste des acteurs
+                $actors[] = $actor;
+            }
+        }
+        return $avis;
+    }
+
+
+
+    #[Route('/fav/{id}', name: 'add_to_favorites')]
+    public function addToFavorites(int $id,EntityManagerInterface $entityManager): Response
+    {
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/'.$id
+        );
+
+
+        $favorite = new Favorite();
+        $favorite->setIdMovie($id);
+
+        $entityManager->persist($favorite);
+        $entityManager->flush();
+
+
+        return $this->render('confirmation.html.twig', [
+            'confirmationMessage' => 'Le film a été ajouté aux favoris avec succès !',
+        ]);
+    }
+
+
 }
 
 

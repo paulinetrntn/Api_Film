@@ -6,11 +6,15 @@
             <div class="card">
                 <div class="row">
                     <div class="col-md-12">
+                        <form method="post" action="{{ path('add_to_favorites', {'id': movie.id}) }}">
+                            <button type="submit">Ajouter aux favoris</button>
+                        </form>
                         <img src="{{ movie.picturePath }}" class="card-img-top img-fluid img-thumbnail" alt="{{ movie.title }}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title text-center">{{ movie.title }}</h5>
+                            <p class="card-text">Avis : </p>
                             <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
                             <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
                             <p class="card-text">Langue :
