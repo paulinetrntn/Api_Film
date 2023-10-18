@@ -132,69 +132,35 @@ class MovieController extends AbstractController{
                 $opinions[] = $opinion;
             }
         }
-
         return $opinions;
     }
 
-
-
-
     #[Route('/fav/{id}', name: 'add_to_favorites')]
-    public function addToFavorites(int $id,EntityManagerInterface $entityManager): Response
+    public function addToFavorites(int $id, EntityManagerInterface $entityManager): Response
     {
         $response = $this->tmbdClient->request(
             'GET',
-            '/3/movie/'.$id
+            '/3/movie/' . $id
         );
 
+        $data = json_decode($response->getContent(), true);
 
-        $favorite = new Favorite();
-        $favorite->setIdMovie($id);
+        if (isset($data['title'])) {
+            $title = $data['title'];
 
-        $entityManager->persist($favorite);
-        $entityManager->flush();
+            $favorite = new Favorite();
+            $favorite->setIdMovie($id);
 
+            $entityManager->persist($favorite);
+            $entityManager->flush();
 
-        return $this->render('confirmation.html.twig', [
-            'confirmationMessage' => 'Le film a été ajouté aux favoris avec succès !',
-        ]);
-    }
-
-
-}
-
-
-
-
-/*
-    #[Route('/popular')]
-    public function getPopularMovies(): Response
-    {
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/popular?language=fr-FR&page=1'
-        );
-            $apiMovies = $response->toArray()['results'];
-            $movies = [];
-            foreach ($apiMovies as $apiMovie) {
-                $movie = new Movie();
-                $movie->setTitle($apiMovie['title']);
-                $movie->setLanguage($apiMovie['original_language']);
-                $movie->setImage('https://image.tmdb.org/t/p/original'.$apiMovie['poster_path']);
-                $movie->setReleaseDate(new \DateTime($apiMovie['release_date']));
-                $movie->setSynopsis($apiMovie['overview']);
-                $movie->setIsAdult($apiMovie['adult']);
-                $movie->setNote($apiMovie['vote_average']);
-                $movies[] = $movie;
-            }
-        $actors = $this->getActors($apiMovie["id"]);
-        foreach ($actors as $actor) {
-            $movie->addActor($actor);
+            return $this->render('confirmation.html.twig', [
+                'confirmationMessage' => 'Le film "' . $title . '" avec l\'ID ' . $id . ' a été ajouté aux favoris avec succès !',
+            ]);
         }
 
-            return $this->render('movie.html.twig',[
-                'movies'=>$movies
-            ]);
-        //return new Response($response->getContent());
-    }
-*/
+        return $this->render('confirmation.html.twig', [
+            'confirmationMessage' => 'Le film avec l\'ID ' . $id . ' n\'a pas été trouvé !',
+    ]);
+}
+}
