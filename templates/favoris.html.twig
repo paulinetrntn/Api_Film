@@ -1,32 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <h1 class="text-white">Liste des favoris :</h1>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-body">
-                        <p>test</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Contenu de la deuxième colonne -->
-                        <p>test</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Contenu de la troisième colonne -->
-                        <p>test</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <table class="table table-bordered text-white">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>ID Film</th>
+                <th>ID Serie</th>
+            </tr>
+            </thead>
+            {% for favori in favoris %}
+                <tr>
+                    <td>{{ favori.id }}</td>
+                    <td>{{ favori.idMovie }}</td>
+                    <td>{{ favori.idSerie }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 
 {% endblock %}

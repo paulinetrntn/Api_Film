@@ -12,7 +12,7 @@
                         <div class="card-body">
                             <h5 class="card-title text-center custom-title">{{ movie.title }}</h5>
                             <p class="card-text overview">{{ movie.overview }}</p>
-                            <form method="post" action="{{ path('add_to_favorites', {'id': movie.id}) }}">
+                            <form method="post" action="{{ path('add_movie_to_favorites', {'id': movie.id}) }}">
                                 <button type="submit" class="custom-favorite-button customFavs">
                                     Ajouter aux favoris <i class="fas fa-heart"></i>
                                 </button>

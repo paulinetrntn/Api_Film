@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Favorite;
 use App\Entity\Movie;
 use App\Entity\Actor;
 use App\Entity\Opinion;
 use App\Entity\Serie;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -203,5 +205,9 @@ class SerieController extends AbstractController
         }
         return $opinions;
     }
+
+
+
+
 
 }

@@ -157,40 +157,8 @@ class MovieController extends AbstractController{
         return $opinions;
     }
 
-    #[Route('/fav/{id}', name: 'add_to_favorites')]
-    public function addToFavorites(int $id, EntityManagerInterface $entityManager): Response
-    {
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/movie/' . $id
-        );
 
-        $data = json_decode($response->getContent(), true);
 
-        if (isset($data['title'])) {
-            $title = $data['title'];
-
-            $favorite = new Favorite();
-            $favorite->setIdMovie($id);
-
-            $entityManager->persist($favorite);
-            $entityManager->flush();
-
-            return $this->render('confirmation.html.twig', [
-                'confirmationMessage' => 'Le film "' . $title . '" avec l\'ID ' . $id . ' a été ajouté aux favoris avec succès !',
-            ]);
-        }
-
-        return $this->render('confirmation.html.twig', [
-            'confirmationMessage' => 'Le film avec l\'ID ' . $id . ' n\'a pas été trouvé !',
-        ]);
-    }
-
-    #[Route('/fav', name: 'favors')]
-    public function Favorites(): Response
-    {
-        return $this->render('favoris.html.twig', []);
-    }
 
 
 }

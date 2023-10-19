@@ -12,11 +12,12 @@
                             <div class="card-body">
                                 <h5 class="card-title text-center custom-title">{{ serie.name }}</h5>
                                 <p class="card-text overview">{{ serie.overview  }}</p>
-                                <form method="post" action="{{ path('add_to_favorites', {'id': serie.id}) }}">
+                                <form method="post" action="{{ path('add_serie_to_favorites', {'id': serie.id}) }}">
                                     <button type="submit" class="custom-favorite-button customFavs">
                                         Ajouter aux favoris <i class="fas fa-heart"></i>
                                     </button>
                                 </form>
+
 
                                 <nav>
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -128,9 +129,12 @@
             .position{
                 margin-top: 30px;
             }
-            .pos{
-                margin-top: 30px;
-            }
+
 
         </style>
 {% endblock %}
+
+
+{% block javascripts %}
+{% endblock %}
+
