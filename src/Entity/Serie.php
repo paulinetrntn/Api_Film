@@ -24,7 +24,7 @@ class Serie {
         private ?boolean $isAdult;
     private ?string $overview;
     private Collection $theme;
-    private Collection $actor;
+    private Collection $actors;
     private Collection $opinion;
 
     /**
@@ -58,7 +58,7 @@ class Serie {
         $this->publicationDate = $publicationDate;
         $this->overview =$overview;
         $this->theme = new ArrayCollection();
-        $this->actor = new ArrayCollection();
+        $this->actors = new ArrayCollection();
         $this->opinion = new ArrayCollection();
     }
 
@@ -213,14 +213,6 @@ class Serie {
 
 
 
-
-
-
-
-
-
-
-
     public function getOpinions(): Collection
     {
         return $this->opinion;
@@ -245,19 +237,17 @@ class Serie {
         return $this;
     }
 
-    public function addActor(Actor $actor): static
-    {
-        if($this->actors->contains($actor)){
+    public function addActor(Actor $actor):static{
+        if(!$this->actors->contains($actor)){
             $this->actors->add($actor);
-            $actor->addMovie($this);
+            //$actor->addMovie($this);
         }
         return $this;
     }
 
-    public function removeActor(Actor $actor): static
-    {
-        if($this->actors->removeElement($actor)){
-            $actor->removeMovie($this);
+    public function removeActor(Actor $actor):static{
+        if(!$this->actors->removeElement($actor)){
+            //$actor->removeMovie($this);
         }
         return $this;
     }

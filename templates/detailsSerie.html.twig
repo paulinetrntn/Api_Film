@@ -1,21 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="row">
-        <div class="col-md-6 ">
+<div class="row">
+        <div class="col-md-6 mx-auto">
             <div class="card">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card-body">
+                            <a href="{{ path('serie_details', {'id': serie.id}) }}">
+                                <h5 class="card-title text-center">{{ serie.name }}</h5>
+                            </a>
                             <h5 class="card-title text-center">{{ serie.name }}</h5>
                             <p class="card-text text-justify text-sm">{{ serie.overview }}</p>
+                            <p class="card-text text-justify text-sm">{{ serie.nbRates }}</p>
+                            <p class="card-text text-justify text-sm">{{ serie.language }}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 {% endblock %}

@@ -77,14 +77,54 @@ class SerieController extends AbstractController
      * @throws ClientExceptionInterface
      * @throws \Exception
      */
-    #[Route('/{id}')]
-    public function getDetails(int $id): Response
+    #[Route('/{id}', name: 'serie_details')]
+    public function getCredits(int $id): Response
     {
         $actors=[];
         $opinions=[];
         $response = $this->tmbdClient->request(
             'GET',
-            '/3/tv/' . $id
+            '/3/tv/'.$id
+        );
+        $serieData = json_decode($response->getContent(), true);
+        if (isset($serieData) && is_array($serieData)) {
+                $releaseDate = new \DateTime($serieData["first_air_date"]);
+                $originCountry = $serieData["origin_country"][0] ?? null;
+                $serie = new Serie(
+                    $serieData["id"],
+                    $serieData["name"],
+                    "https://image.tmdb.org/t/p/original" . $serieData["poster_path"],
+                    $serieData["id"],
+                    $serieData["original_language"],
+                    $serieData["id"],
+                    $serieData["vote_count"],
+                    $originCountry,
+                    $releaseDate,
+                    $serieData["overview"]
+                );
+                $actors = $this->getActors($serieData["id"]);
+                $opinions = $this->getAvis($serieData["id"]);
+
+                foreach ($actors as $actor) {
+                    $serie->addActor($actor);
+                }
+        }
+        return $this->render('detailsSerie.html.twig', [
+            'actors' => $actors,
+            'serie' => $serie,
+            'opinions' => $opinions,
+        ]);
+    }
+
+
+    /*#[Route('/{id}', name: 'serie_details')]
+    public function getCredits(int $id): Response
+    {
+        $actors=[];
+        $opinions=[];
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/tv/'.$id
         );
         $data = json_decode($response->getContent(), true);
         if (isset($data['results']) && is_array($data['results'])) {
@@ -116,7 +156,7 @@ class SerieController extends AbstractController
             'serie' => $serie,
             'opinions' => $opinions,
         ]);
-    }
+    }*/
 
     public function getActors(int $id): array
     {

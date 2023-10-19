@@ -1,6 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    <form action="" method="GET">
+        <input type="text" name="query" placeholder="Recherche...">
+        <button type="submit">Rechercher</button>
+    </form>
+
+
     <h1 class="text-center m-5 text-white">Liste des series : </h1>
     <div class="row">
         {% for serie in series %}
@@ -8,6 +15,9 @@
                 <div class="card" style="height: 850px;margin: 30px;">
                     <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}" style="height: 50%;">
                     <div class="card-body">
+                        <a href="{{ path('serie_details', {'id': serie.id}) }}">
+                            <h5 class="card-title text-center">{{ serie.name }}</h5>
+                        </a>
                         <h5 class="card-title text-center">{{ serie.name }}</h5>
                     </div>
                 </div>

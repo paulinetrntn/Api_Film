@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+    <form action="{{ path('search_movies') }}" method="GET">
+        <input type="text" name="query" placeholder="Rechercher un film...">
+        <button type="submit">Rechercher</button>
+    </form>
+
+
+
     <h1 class="text-center m-5 text-white">Liste des films : </h1>
     <div class="row">
         {% for movie in movies %}
@@ -8,6 +16,9 @@
                 <div class="card" style="height: 850px;margin: 30px;">
                     <img src="{{ movie.picturePath }}" class="card-img-top img-fluid img-thumbnail" alt="{{ movie.title }}" style="height: 50%;">
                     <div class="card-body">
+                        <a href="{{ path('movie_details', {'id': movie.id}) }}">
+                            <h5 class="card-title text-center">{{ movie.title }}</h5>
+                        </a>
                         <h5 class="card-title text-center">{{ movie.title }}</h5>
                         <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
                         <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
