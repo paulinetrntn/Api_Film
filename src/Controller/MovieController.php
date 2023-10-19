@@ -8,6 +8,7 @@ use App\Entity\Favorite;
 use App\Entity\Opinion;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -15,12 +16,8 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-
-
 
 #[Route('/movie')]
-
 class MovieController extends AbstractController{
 
     public function __construct( private  HttpClientInterface $tmbdClient){
@@ -36,25 +33,31 @@ class MovieController extends AbstractController{
 
         return new Response($response->getContent());
     }
-    #[Route('/popular')]
-    public function getMovies(): Response
+    #[Route('/popular','popularFilm')]
+    public function getMovies(Request $request): Response
     {
         $movies=[];//tableau des films
         $response = $this->tmbdClient->request(
             'GET',
             '/3/movie/popular?language=fr-FR&page=1'
         );
-        $data = json_decode($response->getContent(), true);
-        if (isset($data['results']) && is_array($data['results'])) {
-            foreach ($data['results'] as $movieData) {
-                $releaseDate=new \DateTime($movieData['release_date']);
-                $picturePath='https://image.tmdb.org/t/p/original'.$movieData["poster_path"];
-                $movie = new Movie($movieData["id"], $movieData["title"], $picturePath, $movieData["video"],$movieData["overview"], $movieData["original_language"], $movieData["adult"], $releaseDate, $movieData["vote_average"]);
-                $actors=$this->getActors($movieData["id"]);
-                foreach ($actors as $actor){
-                    $movie->addActor($actor);
+
+        if ($request->query->has('q')) {
+            $query = $request->query->get('q');
+            $movies = $this->searchMovies($query);
+        } else {
+            $data = json_decode($response->getContent(), true);
+            if (isset($data['results']) && is_array($data['results'])) {
+                foreach ($data['results'] as $movieData) {
+                    $releaseDate = new \DateTime($movieData['release_date']);
+                    $picturePath = 'https://image.tmdb.org/t/p/original' . $movieData["poster_path"];
+                    $movie = new Movie($movieData["id"], $movieData["title"], $picturePath, $movieData["video"], $movieData["overview"], $movieData["original_language"], $movieData["adult"], $releaseDate, $movieData["vote_average"]);
+                    $actors = $this->getActors($movieData["id"]);
+                    foreach ($actors as $actor) {
+                        $movie->addActor($actor);
+                    }
+                    $movies[] = $movie;
                 }
-                $movies[] = $movie;
             }
         }
         return $this->render('movie.html.twig', [
@@ -67,6 +70,7 @@ class MovieController extends AbstractController{
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
+     * @throws \Exception
      */
     #[Route('/{id}', name: 'movie_details')]
     public function getCredits(int $id) :Response
@@ -77,12 +81,12 @@ class MovieController extends AbstractController{
             'GET',
             '/3/movie/'.$id
         );
-        $movieData = json_decode($response->getContent(), true);//contenue du json
+        $movieData = json_decode($response->getContent(), true);
         if (isset($movieData) && is_array($movieData)) {
             $releaseDate = new \DateTime($movieData['release_date']);
             $picturePath = 'https://image.tmdb.org/t/p/original' . ($movieData["poster_path"] ?? '');
             $movie = new Movie(
-                $movieData["id"],
+                (int)$movieData["id"],
                 $movieData["title"],
                 $picturePath,
                 $movieData["video"],
@@ -182,22 +186,10 @@ class MovieController extends AbstractController{
         ]);
     }
 
-    #[Route('/search', name: 'search_movies')]
-    public function searchMovies(Request $request): Response
+    #[Route('/fav', name: 'favors')]
+    public function Favorites(): Response
     {
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/search/movie'
-        );
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $movieRepository = $entityManager->getRepository(Movie::class);
-
-        // Supprimez les films déjà présents dans la route /movie/popular
-        $popularMovies = $this->getMoviesFromPopularRoute(); // Mettez en œuvre cette fonction
-        $movies = $movieRepository->findByTitleExcludingPopular($title, $popularMovies);
-
-        return $movies;
+        return $this->render('favoris.html.twig', []);
     }
 
 

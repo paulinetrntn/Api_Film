@@ -36,7 +36,7 @@ class SerieController extends AbstractController
         return new Response($response->getContent());
     }
 
-    #[Route('/popular')]
+    #[Route('/popular','popularSerie')]
     public function getSeries(): Response
     {
         $series = [];
@@ -94,10 +94,10 @@ class SerieController extends AbstractController
                     $serieData["id"],
                     $serieData["name"],
                     "https://image.tmdb.org/t/p/original" . $serieData["poster_path"],
-                    $serieData["id"],
+                    $serieData["number_of_seasons"],
                     $serieData["original_language"],
-                    $serieData["id"],
-                    $serieData["vote_count"],
+                    $serieData["number_of_episodes"],
+                    $serieData["vote_average"],
                     $originCountry,
                     $releaseDate,
                     $serieData["overview"]

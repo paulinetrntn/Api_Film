@@ -1,27 +1,136 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="row">
-        <div class="col-md-6 mx-auto">
-            <div class="card">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}">
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <a href="{{ path('serie_details', {'id': serie.id}) }}">
-                                <h5 class="card-title text-center">{{ serie.name }}</h5>
-                            </a>
-                            <h5 class="card-title text-center">{{ serie.name }}</h5>
-                            <p class="card-text text-justify text-sm">{{ serie.overview }}</p>
-                            <p class="card-text text-justify text-sm">{{ serie.nbRates }}</p>
-                            <p class="card-text text-justify text-sm">{{ serie.language }}</p>
+        <div class="row">
+            <div class="col-md-8 mx-auto my-4">
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="{{ serie.image  }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h5 class="card-title text-center custom-title">{{ serie.name }}</h5>
+                                <p class="card-text overview">{{ serie.overview  }}</p>
+                                <form method="post" action="{{ path('add_to_favorites', {'id': serie.id}) }}">
+                                    <button type="submit" class="custom-favorite-button customFavs">
+                                        Ajouter aux favoris <i class="fas fa-heart"></i>
+                                    </button>
+                                </form>
+
+                                <nav>
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                        <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Details</button>
+                                        <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Actor</button>
+                                        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Avis</button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab" tabindex="0">
+                                        <p class="card-text position">Date de sortie : {{ serie.publicationDate|date('d/m/Y') }}</p>
+                                        <p class="card-text ">Langue :
+                                            {% if serie.language == "en" %}
+                                                Anglais
+                                            {% elseif serie.language == "pl" %}
+                                                Polonais
+                                            {% elseif serie.language == "ja" %}
+                                                Polonais
+                                            {% else %}
+                                                Français
+                                            {% endif %}
+                                        </p>
+                                        <p class="card-text text-justify text-sm">Nb saisons : {{ serie.nbSeason }}</p>
+                                        <p class="card-text text-justify text-sm">Nb Episodes : {{ serie.nbEpisodes }}</p>
+                                        <p class="card-text">
+                                            Note : {{ serie.nbRates }}/10
+
+                                            {% set numberOfStars = serie.nbRates|round %}
+                                            {% set numberOfEmptyStars = 10 - numberOfStars %}
+
+                                            {% for i in 1..numberOfStars %}
+                                                <i class="fas fa-star text-warning"></i>
+                                            {% endfor %}
+
+                                            {% for i in 1..numberOfEmptyStars %}
+                                                <i class="far fa-star text-warning"></i>
+                                            {% endfor %}
+                                        </p>
+
+                                    </div>
+                                    <div class="tab-pane fade show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                                        <ul>
+                                            {% for actor in actors %}
+                                                <li> <img src="{{ actor.urlPicture }}" class="card-img-top img-fluid img-thumbnail avatar_actor" alt="image acteur">
+                                                    - {{ actor.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                                        <ul>
+                                            {% for opinion in opinions %}
+                                                <li>
+                                                    <img src="{{ opinion.avatarPath }}" class="card-img-top img-fluid img-thumbnail avatar_avis" alt="image avatar utilisateur">
+                                                    - {{ opinion.username }} - {{ opinion.rating }}/10 :<br></br>{{ opinion.content }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endblock %}
 
+    {% block stylesheets %}
+        <style>
+            .avatar_actor{
+                height: 90px;
+                width: 90px;
+            }
+            .avatar_avis{
+                height: 100px;
+                width: 100px;
+            }
+            .custom-title {
+                border-top: 2px solid #000; /* Ligne au-dessus du titre */
+                border-bottom: 2px solid #000; /* Ligne en dessous du titre */
+                padding: 10px 0;
+                font-size: 1.5rem; /* Taille de police du titre */
+            }
+
+            .custom-favorite-button {
+                background-color: #f8d7da; /* Couleur de fond du bouton */
+                border: none;
+                color: #721c24; /* Couleur du texte du bouton */
+                padding: 10px 20px;
+                border-radius: 5px; /* Coins arrondis du bouton */
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .custom-favorite-button:hover {
+                background-color: #dc3545; /* Couleur de fond au survol */
+                color: #fff; /* Couleur du texte au survol */
+            }
+            .overview{
+                text-align: justify;
+                margin:25px;
+
+            }
+            .customFavs{
+                margin-bottom: 20px;
+                margin-left: 150px;
+            }
+            .position{
+                margin-top: 30px;
+            }
+            .pos{
+                margin-top: 30px;
+            }
+
+        </style>
 {% endblock %}

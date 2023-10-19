@@ -2,70 +2,39 @@
 
 {% block body %}
 
-    <form action="{{ path('search_movies') }}" method="GET">
-        <input type="text" name="query" placeholder="Rechercher un film...">
-        <button type="submit">Rechercher</button>
-    </form>
-
-
-
     <h1 class="text-center m-5 text-white">Liste des films : </h1>
     <div class="row">
         {% for movie in movies %}
             <div class="col-md-4 mb-4">
-                <div class="card" style="height: 850px;margin: 30px;">
+                <div class="card" style="height: 650px;margin: 30px;">
                     <img src="{{ movie.picturePath }}" class="card-img-top img-fluid img-thumbnail" alt="{{ movie.title }}" style="height: 50%;">
                     <div class="card-body">
-                        <a href="{{ path('movie_details', {'id': movie.id}) }}">
-                            <h5 class="card-title text-center">{{ movie.title }}</h5>
+                        <a class="text-decoration-none" href="{{ path('movie_details', {'id': movie.id }) }}">
+                            <h5 class="card-title text-center custom-title">{{ movie.title }}</h5>
                         </a>
-                        <h5 class="card-title text-center">{{ movie.title }}</h5>
-                        <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
-                        <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
-                        <p class="card-text">Langue :
-                            <small class="">
-                                {% if movie.originalLanguage == "en" %}
-                                    Anglais
-                                {% elseif movie.originalLanguage == "pl" %}
-                                    Polonais
-                                {% else %}
-                                    Français
-                                {% endif %}
-                            </small>
-                        </p>
-                        <p class="card-text">
-                            Note : {{ movie.voteAverage }}/10
-
-                            {% set numberOfStars = movie.voteAverage|round %}
-                            {% set numberOfEmptyStars = 10 - numberOfStars %}
-
-                            {% for i in 1..numberOfStars %}
-                                <i class="fas fa-star text-warning"></i>
-                            {% endfor %}
-
-                            {% for i in 1..numberOfEmptyStars %}
-                                <i class="far fa-star text-warning"></i>
-                            {% endfor %}
-                        </p>
-                        <p class="card-text">
-                            <small class="text-muted">
-                                {% if movie.isAdult == true %}
-                                    Ce film est pour adultes.
-                                {% else %}
-                                    Ce film est adapté à tous les publics.
-                                {% endif %}
-                            </small>
-                        </p>
-                        <h3>Acteur :</h3>
-                        <ul>
-                            {% for actor in movie.actors %}
-                                {{ actor.name }},
-                            {% endfor %}
-                        </ul>
-
+                        <p class="card-text custom-justify text-ellipsis mx-auto">{{ movie.overview|slice(0, 350) }}{{ movie.overview|length > 150 ? '...' : '' }}</p>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 {% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .custom-justify {
+            text-align: justify;
+            margin-top: 30px;
+            height: 190px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .custom-title {
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            padding: 10px 0;
+            color: black;
+        }
+    </style>
+{% endblock %}
+

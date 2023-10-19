@@ -2,23 +2,17 @@
 
 {% block body %}
 
-    <form action="" method="GET">
-        <input type="text" name="query" placeholder="Recherche...">
-        <button type="submit">Rechercher</button>
-    </form>
-
-
     <h1 class="text-center m-5 text-white">Liste des series : </h1>
     <div class="row">
         {% for serie in series %}
             <div class="col-md-4 mb-4">
-                <div class="card" style="height: 850px;margin: 30px;">
+                <div class="card" style="height: 650px;margin: 30px;">
                     <img src="{{ serie.image }}" class="card-img-top img-fluid img-thumbnail" alt="{{ serie.name }}" style="height: 50%;">
                     <div class="card-body">
                         <a href="{{ path('serie_details', {'id': serie.id}) }}">
                             <h5 class="card-title text-center">{{ serie.name }}</h5>
                         </a>
-                        <h5 class="card-title text-center">{{ serie.name }}</h5>
+                        <p class="card-text custom-justify text-ellipsis mx-auto">{{ serie.overview|slice(0, 350) }}{{ serie.overview|length > 150 ? '...' : '' }}</p>
                     </div>
                 </div>
             </div>
@@ -26,3 +20,14 @@
     </div>
 {% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .custom-justify {
+            text-align: justify;
+            margin-top: 30px;
+            height: 190px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+{% endblock %}

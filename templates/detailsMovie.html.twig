@@ -2,68 +2,85 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-6 ">
+        <div class="col-md-8 mx-auto my-4">
             <div class="card">
                 <div class="row">
-                    <div class="col-md-12">
-                        <form method="post" action="{{ path('add_to_favorites', {'id': movie.id}) }}">
-                            <button type="submit">Ajouter aux favoris</button>
-                        </form>
+                    <div class="col-md-6">
                         <img src="{{ movie.picturePath }}" class="card-img-top img-fluid img-thumbnail" alt="{{ movie.title }}">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="card-body">
-                            <h5 class="card-title text-center">{{ movie.title }}</h5>
-                            <p class="card-text text-justify text-sm">{{ movie.overview }}</p>
-                            <p class="card-text"><small class="">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</small></p>
-                            <p class="card-text">Langue :
-                                <small class="">
-                                    {% if movie.originalLanguage == "en" %}
-                                        Anglais
-                                    {% elseif movie.originalLanguage == "pl" %}
-                                        Polonais
-                                    {% else %}
-                                        Français
-                                    {% endif %}
-                                </small>
-                            </p>
-                            <p class="card-text">
-                                Note : {{ movie.voteAverage }}/10
+                            <h5 class="card-title text-center custom-title">{{ movie.title }}</h5>
+                            <p class="card-text overview">{{ movie.overview }}</p>
+                            <form method="post" action="{{ path('add_to_favorites', {'id': movie.id}) }}">
+                                <button type="submit" class="custom-favorite-button customFavs">
+                                    Ajouter aux favoris <i class="fas fa-heart"></i>
+                                </button>
+                            </form>
 
-                                {% set numberOfStars = movie.voteAverage|round %}
-                                {% set numberOfEmptyStars = 10 - numberOfStars %}
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Details</button>
+                                    <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Actor</button>
+                                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Avis</button>
+                                </div>
+                            </nav>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane fade show active" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab" tabindex="0">
+                                    <p class="card-text position">Date de sortie : {{ movie.releaseDate|date('d/m/Y') }}</p>
+                                    <p class="card-text ">Langue :
+                                            {% if movie.originalLanguage == "en" %}
+                                                Anglais
+                                            {% elseif movie.originalLanguage == "pl" %}
+                                                Polonais
+                                            {% else %}
+                                                Français
+                                            {% endif %}
+                                    </p>
+                                    <p class="card-text">
+                                        Note : {{ movie.voteAverage }}/10
 
-                                {% for i in 1..numberOfStars %}
-                                    <i class="fas fa-star text-warning"></i>
-                                {% endfor %}
+                                        {% set numberOfStars = movie.voteAverage|round %}
+                                        {% set numberOfEmptyStars = 10 - numberOfStars %}
 
-                                {% for i in 1..numberOfEmptyStars %}
-                                    <i class="far fa-star text-warning"></i>
-                                {% endfor %}
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    {% if movie.isAdult == true %}
-                                        Ce film est pour adultes.
-                                    {% else %}
-                                        Ce film est adapté à tous les publics.
-                                    {% endif %}
-                                </small>
-                            </p>
-                            <h3>Acteur :</h3>
-                            <ul>
-                                {% for actor in actors %}
-                                    <img src="{{ actor.urlPicture }}">
-                                    <li>{{ actor.name }} - {{ actor.gender }}</li>
-                                {% endfor %}
-                            </ul>
-                            <h3>Avis :</h3>
-                            <ul>
-                                {% for opinion in opinions %}
-                                    <img src="{{ opinion.avatarPath }}">
-                                    <li>{{ opinion.username }} - {{ opinion.rating }} - {{ opinion.content }}</li>
-                                {% endfor %}
-                            </ul>
+                                        {% for i in 1..numberOfStars %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% endfor %}
+
+                                        {% for i in 1..numberOfEmptyStars %}
+                                            <i class="far fa-star text-warning"></i>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="card-text text-center pos">
+                                        <small class="text-muted">
+                                            {% if movie.isAdult == true %}
+                                                Ce film est pour adultes.
+                                            {% else %}
+                                                Ce film est adapté à tous les publics.
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="tab-pane fade show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                                    <ul>
+                                        {% for actor in actors %}
+                                            <li> <img src="{{ actor.urlPicture }}" class="card-img-top img-fluid img-thumbnail avatar_actor" alt="image acteur">
+                                            - {{ actor.name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                                    <ul>
+                                        {% for opinion in opinions %}
+                                            <li>
+                                                <img src="{{ opinion.avatarPath }}" class="card-img-top img-fluid img-thumbnail avatar_avis" alt="image avatar utilisateur">
+                                            - {{ opinion.username }} - {{ opinion.rating }}/10 :<br></br>{{ opinion.content }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -71,3 +88,54 @@
         </div>
     </div>
 {% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .avatar_actor{
+            height: 90px;
+            width: 90px;
+        }
+        .avatar_avis{
+            height: 100px;
+            width: 100px;
+        }
+        .custom-title {
+            border-top: 2px solid #000; /* Ligne au-dessus du titre */
+            border-bottom: 2px solid #000; /* Ligne en dessous du titre */
+            padding: 10px 0;
+            font-size: 1.5rem; /* Taille de police du titre */
+        }
+
+        .custom-favorite-button {
+            background-color: #f8d7da; /* Couleur de fond du bouton */
+            border: none;
+            color: #721c24; /* Couleur du texte du bouton */
+            padding: 10px 20px;
+            border-radius: 5px; /* Coins arrondis du bouton */
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .custom-favorite-button:hover {
+            background-color: #dc3545; /* Couleur de fond au survol */
+            color: #fff; /* Couleur du texte au survol */
+        }
+        .overview{
+            text-align: justify;
+            margin:25px;
+
+        }
+        .customFavs{
+            margin-bottom: 20px;
+            margin-left: 150px;
+        }
+        .position{
+            margin-top: 30px;
+        }
+        .pos{
+            margin-top: 30px;
+        }
+
+    </style>
+{% endblock %}
+
