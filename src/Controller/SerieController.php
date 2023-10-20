@@ -18,18 +18,21 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-
 
 
 #[Route('/serie')]
-
 class SerieController extends AbstractController
 {
     public function __construct(private HttpClientInterface $tmbdClient)
     {
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/all')]
     public function getAllSeries(): Response
     {
@@ -63,9 +66,9 @@ class SerieController extends AbstractController
                     $serieData["vote_count"],
                     $originCountry,
                     $releaseDate,
-                    $serieData["overview"]
+                    $serieData["overview"],
+                    $serieData["adult"]
                 );
-
                 $series[] = $serie;
             }
         }
@@ -104,7 +107,8 @@ class SerieController extends AbstractController
                     $serieData["vote_average"],
                     $originCountry,
                     $releaseDate,
-                    $serieData["overview"]
+                    $serieData["overview"],
+                    $serieData["adult"]
                 );
                 $actors = $this->getActors($serieData["id"]);
                 $opinions = $this->getAvis($serieData["id"]);
@@ -116,8 +120,6 @@ class SerieController extends AbstractController
             $avisRepository = $entityManager->getRepository(Avis::class);
             $avis = $avisRepository->findBy(['idSerie' => $id]);
             $form->get('idSerie')->setData($id); // Pré-remplir le champ 'idSerie' avec l'ID de la série
-
-
         }
         return $this->render('detailsSerie.html.twig', [
             'actors' => $actors,
@@ -128,48 +130,6 @@ class SerieController extends AbstractController
             'avis' => $avis,
         ]);
     }
-
-
-    /*#[Route('/{id}', name: 'serie_details')]
-    public function getCredits(int $id): Response
-    {
-        $actors=[];
-        $opinions=[];
-        $response = $this->tmbdClient->request(
-            'GET',
-            '/3/tv/'.$id
-        );
-        $data = json_decode($response->getContent(), true);
-        if (isset($data['results']) && is_array($data['results'])) {
-            foreach ($data['results'] as $serieData) {
-                $releaseDate = new \DateTime($serieData["first_air_date"]);
-                $originCountry = $serieData["origin_country"][0] ?? null;
-                $serie = new Serie(
-                    $serieData["id"],
-                    $serieData["name"],
-                    "https://image.tmdb.org/t/p/original" . $serieData["poster_path"],
-                    $serieData["id"],
-                    $serieData["original_language"],
-                    $serieData["id"],
-                    $serieData["vote_count"],
-                    $originCountry,
-                    $releaseDate,
-                    $serieData["overview"]
-                );
-                $actors = $this->getActors($serieData["id"]);
-                $opinions = $this->getAvis($serieData["id"]);
-
-                foreach ($actors as $actor) {
-                    $serie->addActor($actor);
-                }
-            }
-        }
-        return $this->render('detailsSerie.html.twig', [
-            'actors' => $actors,
-            'serie' => $serie,
-            'opinions' => $opinions,
-        ]);
-    }*/
 
     public function getActors(int $id): array
     {
@@ -216,28 +176,4 @@ class SerieController extends AbstractController
         }
         return $opinions;
     }
-
-    //#[Route('/addavis', name: 'ajouter_avis')]
-    public function ajouterAvis(Request $request): Response
-    {
-        $avis = new Avis();
-        $form = $this->createForm(AvisFormType::class, $avis);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->persist($avis);
-            $this->entityManager->flush();
-
-            $this->addFlash('success', 'Avis ajouté avec succès !');
-
-            // Rediriger l'utilisateur vers une page de confirmation ou la page de détails du film/serie.
-
-            //return $this->redirectToRoute('page_de_confirmation');
-        }
-
-        return $this->render('detailsSerie.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
-
 }

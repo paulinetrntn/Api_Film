@@ -63,7 +63,15 @@
                                                 <i class="far fa-star text-warning"></i>
                                             {% endfor %}
                                         </p>
-
+                                        <p class="card-text text-center pos">
+                                            <small class="text-muted">
+                                                {% if serie.isAdult == true %}
+                                                    Ce film est pour adultes.
+                                                {% else %}
+                                                    Ce film est adapté à tous les publics.
+                                                {% endif %}
+                                            </small>
+                                        </p>
                                     </div>
                                     <div class="tab-pane fade show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
                                         <ul>
@@ -158,7 +166,9 @@
             .position{
                 margin-top: 30px;
             }
-
+            .pos{
+                margin-top: 30px;
+            }
 
         </style>
 {% endblock %}

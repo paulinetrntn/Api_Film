@@ -32,7 +32,6 @@ class Favorite
     public function setIdMovie(?int $idMovie): static
     {
         $this->idMovie = $idMovie;
-
         return $this;
     }
 
@@ -44,7 +43,6 @@ class Favorite
     public function setIdSerie(?int $idSerie): static
     {
         $this->idSerie = $idSerie;
-
         return $this;
     }
 }

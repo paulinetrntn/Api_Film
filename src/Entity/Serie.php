@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 
 class Serie {
-
         private ?int $id;
         private ?string $name;
         private ?int $nbSeason;
@@ -21,7 +20,7 @@ class Serie {
         private ?string $realisation;
         private ?DateTime $publicationDate;
         private ?string $status;
-        private ?boolean $isAdult;
+        private ?bool $isAdult;
         private ?string $overview;
         private Collection $theme;
         private Collection $actors;
@@ -46,7 +45,7 @@ class Serie {
      * @param Collection $actor
      * @param Collection $opinion
      */
-    public function __construct(?int $id, ?string $name, ?string $image,?int $nbSeason , ?string $language,?int $nbEpisodes,?int $nbRates,?string $country,?DateTime $publicationDate, ?string $overview)
+    public function __construct(?int $id, ?string $name, ?string $image,?int $nbSeason , ?string $language,?int $nbEpisodes,?int $nbRates,?string $country,?DateTime $publicationDate, ?string $overview,?bool $isAdult)
     {
         $this->id = $id;
         $this->name = $name;
@@ -58,11 +57,11 @@ class Serie {
         $this->country = $country;
         $this->publicationDate = $publicationDate;
         $this->overview =$overview;
+        $this->isAdult =$isAdult;
         $this->theme = new ArrayCollection();
         $this->actors = new ArrayCollection();
         $this->opinion = new ArrayCollection();
     }
-
 
     public function getId(): ?int
     {

@@ -27,11 +27,9 @@ class FavorisController extends AbstractController{
         ]);
     }
 
-
     #[Route('/movie/{id}', name: 'add_movie_to_favorites')]
     public function addMovieToFavorites(int $id, EntityManagerInterface $entityManager): Response
     {
-        // Vérifier si l'élément existe déjà en base de données
         $existingFavorite = $entityManager->getRepository(Favorite::class)->findOneBy(['idMovie' => $id]);
 
         if ($existingFavorite) {
@@ -40,7 +38,6 @@ class FavorisController extends AbstractController{
             ]);
         }
         else{
-
             $response = $this->tmbdClient->request(
                 'GET',
                 '/3/movie/' . $id
@@ -76,7 +73,6 @@ class FavorisController extends AbstractController{
     #[Route('/serie/{id}', name: 'add_serie_to_favorites')]
     public function addSerieToFavorites(int $id, EntityManagerInterface $entityManager): Response
     {
-        // Vérifier si l'élément existe déjà en base de données
         $existingFavorite = $entityManager->getRepository(Favorite::class)->findOneBy(['idSerie' => $id]);
 
         if ($existingFavorite) {
@@ -85,8 +81,6 @@ class FavorisController extends AbstractController{
             ]);
         }
         else{
-
-            // Si l'élément n'existe pas, le récupérer depuis l'API
             $response = $this->tmbdClient->request(
                 'GET',
                 '/3/tv/' . $id
@@ -107,9 +101,7 @@ class FavorisController extends AbstractController{
                     'confirmationMessage' => 'La série "' . $title . '" avec l\'ID ' . $id . ' a été ajoutée aux favoris avec succès !',
                 ]);
             }
-
         }
-
         return $this->render('confirmation.html.twig', [
             'confirmationMessage' => 'La série avec l\'ID ' . $id . ' n\'a pas été trouvée !',
         ]);
@@ -120,7 +112,4 @@ class FavorisController extends AbstractController{
     {
         return $this->render('favoris.html.twig');
     }
-
-
-
 }

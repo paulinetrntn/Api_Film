@@ -8,7 +8,6 @@ use phpDocumentor\Reflection\Types\Boolean;
 
 
 class Movie {
-
     private ?int $id;
     private ?string $title;
     private ?string $picturePath;
@@ -18,6 +17,7 @@ class Movie {
     private ?DateTime $releaseDate;
     private ?int $voteAverage;
     private ?String $overview;
+    private ArrayCollection $actors;
 
 
     public function __construct($id, $title, $picturePath, $isVideo, $overview, $originalLanguage, $isAdult, $releaseDate, $voteAverage)
@@ -144,7 +144,6 @@ class Movie {
         return $this;
     }
 
-
     public function addActor(Actor $actor):static{
         if(!$this->actors->contains($actor)){
             $this->actors->add($actor);
@@ -159,5 +158,4 @@ class Movie {
         }
         return $this;
     }
-
 }

@@ -6,15 +6,13 @@ use Doctrine\ORM\Mapping\Entity;
 use phpDocumentor\Reflection\Types\Boolean;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
 class Actor {
-
     private ?int $id;
     private ?string $name;
     private ?string $urlPicture;
     private ?string $gender;
     private ?string $biography;
-
+    private ArrayCollection $movies;
 
     public function __construct($id, $gender, $urlPicture, $name)
     {
@@ -86,7 +84,4 @@ class Actor {
     {
         $this->biography = $biography;
     }
-
-
-
 }

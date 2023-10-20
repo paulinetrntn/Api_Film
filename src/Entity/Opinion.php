@@ -52,7 +52,6 @@ class Opinion
         return $this;
     }
 
-
     public function getId(): ?int
     {
         return $this->id;
@@ -62,7 +61,6 @@ class Opinion
     {
         $this->id = $id;
     }
-
 
     public function getUsername(): ?string
     {
@@ -74,7 +72,6 @@ class Opinion
         $this->username = $username;
     }
 
-
     public function getAvatarPath(): ?string
     {
         return $this->avatarPath;
@@ -85,5 +82,4 @@ class Opinion
         $this->avatarPath = $avatarPath;
         return $this;
     }
-
 }

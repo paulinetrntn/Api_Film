@@ -58,7 +58,6 @@ class Avis
     public function setIdMovie(?int $idMovie): static
     {
         $this->idMovie = $idMovie;
-
         return $this;
     }
 
@@ -70,7 +69,6 @@ class Avis
     public function setIdSerie(?int $idSerie): static
     {
         $this->idSerie = $idSerie;
-
         return $this;
     }
 
@@ -82,7 +80,6 @@ class Avis
     public function setUsername(?string $username): static
     {
         $this->username = $username;
-
         return $this;
     }
 
@@ -94,7 +91,6 @@ class Avis
     public function setRates(?int $rates): static
     {
         $this->rates = $rates;
-
         return $this;
     }
 
@@ -106,7 +102,6 @@ class Avis
     public function setDescription(?string $description): static
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -118,7 +113,6 @@ class Avis
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
-
         return $this;
     }
 }

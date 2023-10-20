@@ -25,6 +25,12 @@ class MovieController extends AbstractController{
     public function __construct( private  HttpClientInterface $tmbdClient){
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/all')]
     public function getAllMovies(): Response
     {
@@ -32,7 +38,6 @@ class MovieController extends AbstractController{
             'GET',
             '/3/movie/popular?language=fr-FR&page=1'
         );
-
         return new Response($response->getContent());
     }
     #[Route('/popular','popularFilm')]
@@ -164,9 +169,4 @@ class MovieController extends AbstractController{
         }
         return $opinions;
     }
-
-
-
-
-
 }
