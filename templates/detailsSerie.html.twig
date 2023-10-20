@@ -100,12 +100,11 @@
                                         {% else %}
                                             <p>Aucun avis ajouté.</p>
                                         {% endif %}
-                                        {{ form_start(form) }}
-                                        {{ form_row(form.username) }}
-                                        {{ form_row(form.rates) }}
-                                        {{ form_row(form.description) }}
-                                        <button type="submit" class="btn btn-primary">Ajouter l'avis</button>
-                                        {{ form_end(form) }}
+                                        <div>
+                                            <a class="text-decoration-none" href="{{ path('ajouter_avis_serie', {'id': serie.id}) }}">
+                                                <h5 class="card-title text-center custom-title">Ajouter un avis</h5>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

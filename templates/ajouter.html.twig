@@ -1,19 +1,37 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="form mt-4">
+        <h1>Ajouter un avis</h1>
+        <div class="textcustom">
+            {{ form_start(form) }}
+            {{ form_row(form.idMovie) }}
+            {{ form_row(form.idSerie) }}
+            {{ form_row(form.username) }}
+            {{ form_row(form.rates) }}
+            {{ form_row(form.description) }}
+            <button type="submit" class="btn btn-primary">Ajouter l'avis</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
 
-    <h1>Ajouter un avis</h1>
+{% block stylesheets %}
+<style>
+    .form{
+        margin: auto;
+        width: 500px;
+        border:solid white;
+        border-radius: 30px;
+    }
+    h1{
+        text-align: center;
+        color: white;
+    }
+    .textcustom{
+        margin: 10px;
+        color: white;
+    }
 
-    {{ form_start(form) }}
-
-    {{ form_row(form.idSerie) }}
-    {{ form_row(form.username) }}
-    {{ form_row(form.rates) }}
-    {{ form_row(form.description) }}
-
-    <button type="submit" class="btn btn-primary">Ajouter l'avis</button>
-
-    {{ form_end(form) }}
-
-
+</style>
 {% endblock %}

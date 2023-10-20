@@ -22,6 +22,7 @@ class AvisController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
+    /*
     #[Route('/addavis', name: 'ajouter_avis')]
     public function ajouterAvis(Request $request): Response
     {
@@ -47,12 +48,57 @@ class AvisController extends AbstractController
         ]);
 
         return $this->redirectToRoute('serie_details', ['id' => $serieId]);
-
         return $this->render('ajouter.html.twig', [
             'form' => $form,]);
-
-        */
-        return $this->redirectToRoute('serie_details', ['id' => $serieId]);
-
     }
+    */
+
+    #[Route('/addavisserie/{id}', name: 'ajouter_avis_serie')]
+    public function ajouterAvisSerie(int $id, Request $request): Response
+    {
+        $avis = new Avis();
+        $avis->setDate(new \DateTime());
+        $avis->setIdSerie($id);
+
+        $form = $this->createForm(AvisFormType::class, $avis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($avis);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Avis ajouté avec succès !');
+
+            return $this->redirectToRoute('serie_details', ['id' => $id]);
+        }
+
+        return $this->render('ajouter.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/addavisfilm/{id}', name: 'ajouter_avis_film')]
+    public function ajouterAvisFilm(int $id, Request $request): Response
+    {
+        $avis = new Avis();
+        $avis->setDate(new \DateTime());
+        $avis->setIdMovie($id);
+
+        $form = $this->createForm(AvisFormType::class, $avis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($avis);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'Avis ajouté avec succès !');
+
+            return $this->redirectToRoute('movie_details', ['id' => $id]);
+        }
+
+        return $this->render('ajouter.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
 }
