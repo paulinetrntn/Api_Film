@@ -32,6 +32,19 @@ class Avis
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    //BDD Form Avis
+    /**
+     * @ORM\ManyToOne(targetEntity=Serie::class, inversedBy="avis")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $serie;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Movie::class, inversedBy="avis")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $movie;
+
     public function getId(): ?int
     {
         return $this->id;

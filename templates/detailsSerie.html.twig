@@ -11,7 +11,13 @@
                         <div class="col-md-6">
                             <div class="card-body">
                                 <h5 class="card-title text-center custom-title">{{ serie.name }}</h5>
-                                <p class="card-text overview">{{ serie.overview  }}</p>
+                                <p class="card-text overview">
+                                    {% if serie.overview is empty %}
+                                        Aucune description disponible.
+                                    {% else %}
+                                        {{ serie.overview }}
+                                    {% endif %}
+                                </p>
                                 <form method="post" action="{{ path('add_serie_to_favorites', {'id': serie.id}) }}">
                                     <button type="submit" class="custom-favorite-button customFavs">
                                         Ajouter aux favoris <i class="fas fa-heart"></i>
@@ -24,6 +30,7 @@
                                         <button class="nav-link active" id="nav-details-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Details</button>
                                         <button class="nav-link " id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="false">Actor</button>
                                         <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Avis</button>
+                                        <button class="nav-link" id="nav-addAvis-tab" data-bs-toggle="tab" data-bs-target="#nav-addAvis" type="button" role="tab" aria-controls="nav-addAvis" aria-selected="false">Mes avis</button>
                                     </div>
                                 </nav>
                                 <div class="tab-content" id="nav-tabContent">
@@ -67,17 +74,40 @@
                                         </ul>
                                     </div>
                                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
-                                        <ul>
-                                            {% for opinion in opinions %}
-                                                <li>
-                                                    <img src="{{ opinion.avatarPath }}" class="card-img-top img-fluid img-thumbnail avatar_avis" alt="image avatar utilisateur">
-                                                    - {{ opinion.username }} - {{ opinion.rating }}/10 :<br></br>{{ opinion.content }}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
+                                        {% if opinions is not empty %}
+                                            <ul>
+                                                {% for opinion in opinions %}
+                                                     <li>
+                                                        <img src="{{ opinion.avatarPath }}" class="card-img-top img-fluid img-thumbnail avatar_avis" alt="image avatar utilisateur">
+                                                        - {{ opinion.username }} - {{ opinion.rating }}/10 :<br></br>{{ opinion.content }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>Aucun opinion trouvé.</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-addAvis" role="tabpanel" aria-labelledby="nav-addAvis-tab" tabindex="0">
+                                        {% if avis is not empty %}
+                                            <h2>Avis existants :</h2>
+                                            <ul>
+                                                {% for avi in avis %}
+                                                    <li>
+                                                        {{ avi.username }} a noté {{ avi.rates }}/10 : {{ avi.description }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p>Aucun avis ajouté.</p>
+                                        {% endif %}
+                                        {{ form_start(form) }}
+                                        {{ form_row(form.username) }}
+                                        {{ form_row(form.rates) }}
+                                        {{ form_row(form.description) }}
+                                        <button type="submit" class="btn btn-primary">Ajouter l'avis</button>
+                                        {{ form_end(form) }}
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

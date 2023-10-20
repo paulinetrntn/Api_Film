@@ -22,10 +22,11 @@ class Serie {
         private ?DateTime $publicationDate;
         private ?string $status;
         private ?boolean $isAdult;
-    private ?string $overview;
-    private Collection $theme;
-    private Collection $actors;
-    private Collection $opinion;
+        private ?string $overview;
+        private Collection $theme;
+        private Collection $actors;
+        private Collection $opinion;
+
 
     /**
      * @param int|null $id

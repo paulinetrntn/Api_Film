@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Movie;
 use App\Entity\Actor;
 use App\Entity\Favorite;
 use App\Entity\Opinion;
+use App\Form\AvisFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,7 +75,7 @@ class MovieController extends AbstractController{
      * @throws \Exception
      */
     #[Route('/{id}', name: 'movie_details')]
-    public function getCredits(int $id) :Response
+    public function getCredits(int $id,EntityManagerInterface $entityManager) :Response
     {
         $actors=[];
         $opinions=[];
@@ -101,11 +103,17 @@ class MovieController extends AbstractController{
             foreach ($actors as $actor) {
                 $movie->addActor($actor);
             }
+            $form = $this->createForm(AvisFormType::class);
+            $avisRepository = $entityManager->getRepository(Avis::class);
+            $avis = $avisRepository->findBy(['idMovie' => $id]);
         }
         return $this->render('detailsMovie.html.twig', [
             'actors' => $actors,
             'movie' => $movie,
             'opinions' => $opinions,
+            'movieId' => $id,
+            'form' => $form->createView(),
+            'avis' => $avis,
         ]);
     }
     public function getActors(int $id): array

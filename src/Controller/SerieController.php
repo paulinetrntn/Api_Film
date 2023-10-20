@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Avis;
 use App\Entity\Favorite;
 use App\Entity\Movie;
 use App\Entity\Actor;
 use App\Entity\Opinion;
 use App\Entity\Serie;
+use App\Form\AvisFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +82,7 @@ class SerieController extends AbstractController
      * @throws \Exception
      */
     #[Route('/{id}', name: 'serie_details')]
-    public function getCredits(int $id): Response
+    public function getCredits(int $id , EntityManagerInterface $entityManager): Response
     {
         $actors=[];
         $opinions=[];
@@ -110,11 +112,20 @@ class SerieController extends AbstractController
                 foreach ($actors as $actor) {
                     $serie->addActor($actor);
                 }
+            $form = $this->createForm(AvisFormType::class);
+            $avisRepository = $entityManager->getRepository(Avis::class);
+            $avis = $avisRepository->findBy(['idSerie' => $id]);
+            $form->get('idSerie')->setData($id); // Pré-remplir le champ 'idSerie' avec l'ID de la série
+
+
         }
         return $this->render('detailsSerie.html.twig', [
             'actors' => $actors,
             'serie' => $serie,
             'opinions' => $opinions,
+            'serieId' => $id,
+            'form' => $form->createView(),
+            'avis' => $avis,
         ]);
     }
 
@@ -206,8 +217,27 @@ class SerieController extends AbstractController
         return $opinions;
     }
 
+    //#[Route('/addavis', name: 'ajouter_avis')]
+    public function ajouterAvis(Request $request): Response
+    {
+        $avis = new Avis();
+        $form = $this->createForm(AvisFormType::class, $avis);
+        $form->handleRequest($request);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->entityManager->persist($avis);
+            $this->entityManager->flush();
 
+            $this->addFlash('success', 'Avis ajouté avec succès !');
 
+            // Rediriger l'utilisateur vers une page de confirmation ou la page de détails du film/serie.
+
+            //return $this->redirectToRoute('page_de_confirmation');
+        }
+
+        return $this->render('detailsSerie.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
 }
