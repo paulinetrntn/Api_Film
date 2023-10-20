@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Résultats de la recherche pour "{{ searchTerm }}"</h1>
+
+    {% if searchResults.results > 0 %}
+        <ul>
+            {% for movie in searchResults.results %}
+                <li>
+                    <h2>{{ movie.title }}</h2>
+                    <p>Date de sortie : {{ movie.release_date|date('d/m/Y') }}</p>
+                    <p>Langue : {{ movie.original_language }}</p>
+                    <p>Vote moyen : {{ movie.vote_average }}</p>
+                    <p>{{ movie.overview }}</p>
+                    <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}" width="200">
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun résultat trouvé pour "{{ searchTerm }}".</p>
+    {% endif %}
+
+    <a href="{{ path('popularFilm') }}">Retour à la page d'accueil</a>
+{% endblock %}
