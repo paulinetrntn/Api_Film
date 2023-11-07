@@ -19,6 +19,14 @@ class SearchController extends AbstractController
     }
 
     /**
+     * @Route("/", name="default_route")
+     */
+    public function redirectToDefaultRoute(): Response
+    {
+        return $this->redirectToRoute('popularFilm');
+    }
+
+    /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface

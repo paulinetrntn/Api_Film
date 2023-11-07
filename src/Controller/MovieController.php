@@ -40,6 +40,13 @@ class MovieController extends AbstractController{
         );
         return new Response($response->getContent());
     }
+    /**
+     * @Route("/",name="redirectRoot")
+     */
+    public function RedirectRoot(){
+        return $this->redirectToRoute('popularFilm');
+    }
+
     #[Route('/popular','popularFilm')]
     public function getMovies(Request $request): Response
     {

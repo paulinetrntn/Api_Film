@@ -1,24 +1,63 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
-    <h1>Résultats de la recherche pour "{{ searchTerm }}"</h1>
-
+    <h1 class="text-center m-5 text-white">Résultats de la recherche pour "<span class="text-danger">{{ searchTerm }}</span>"</h1>
     {% if searchResults.results > 0 %}
-        <ul>
-            {% for movie in searchResults.results %}
-                <li>
-                    <h2>{{ movie.title }}</h2>
-                    <p>Date de sortie : {{ movie.release_date|date('d/m/Y') }}</p>
-                    <p>Langue : {{ movie.original_language }}</p>
-                    <p>Vote moyen : {{ movie.vote_average }}</p>
-                    <p>{{ movie.overview }}</p>
-                    <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}" width="200">
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="container mt-4">
+            <div class="row">
+                {% for movie in searchResults.results %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}">
+                            <div class="card-title-overlay">
+                                <h5 class="card-title">{{ movie.title }}</h5>
+                                <p>{{ movie.overview }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     {% else %}
         <p>Aucun résultat trouvé pour "{{ searchTerm }}".</p>
     {% endif %}
 
     <a href="{{ path('popularFilm') }}">Retour à la page d'accueil</a>
+
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-title-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        text-align: center;
+        padding: 10px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .card:hover .card-title-overlay {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+    .card img {
+        transition: filter 0.3s;
+    }
+
+    .card:hover img {
+        filter: blur(5px);
+        transition: filter 0.3s;
+    }
+</style>
 {% endblock %}
