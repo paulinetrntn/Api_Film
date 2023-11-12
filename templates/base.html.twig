@@ -47,6 +47,21 @@
                             <span class="span-nav-custom" >Favoris</span>
                         </a>
                     </li>
+                    {% if app.user %}
+                        {# If connected #}
+                        <li class="nav-item m-1">
+                            <a class="nav-link btn btn-outline-dark" href="{{ path('app_logout')}}">
+                                <span class="span-nav-custom" >Deconnexion</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        {# If NOT connected #}
+                        <li class="nav-item m-1">
+                            <a class="nav-link btn btn-outline-dark" href="{{ path('app_login')}}">
+                                <span class="span-nav-custom" >Se connecter</span>
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </header>
