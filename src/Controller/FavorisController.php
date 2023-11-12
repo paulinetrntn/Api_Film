@@ -50,6 +50,7 @@ class FavorisController extends AbstractController{
 
                 $favorite = new Favorite();
                 $favorite->setIdMovie($id);
+                $favorite->setTitle($title);
 
                 $entityManager->persist($favorite);
                 $entityManager->flush();
@@ -93,6 +94,7 @@ class FavorisController extends AbstractController{
 
                 $favorite = new Favorite();
                 $favorite->setIdSerie($id);
+                $favorite->setTitle($title);
 
                 $entityManager->persist($favorite);
                 $entityManager->flush();

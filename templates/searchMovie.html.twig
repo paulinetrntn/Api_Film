@@ -7,9 +7,11 @@
                 {% for movie in searchResults.results %}
                     <div class="col-md-4">
                         <div class="card mb-4">
-                            <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}">
+                            <img src="https://image.tmdb.org/t/p/original{{ movie.poster_path }}" alt="{{ movie.title }}" href="{{ path('movie_details', {'id': movie.id }) }}">
                             <div class="card-title-overlay">
-                                <h5 class="card-title">{{ movie.title }}</h5>
+                                <a class="text-decoration-none" href="{{ path('movie_details', {'id': movie.id }) }}">
+                                    <h5 class="card-title text-center custom-title">{{ movie.title }}</h5>
+                                </a>
                                 <p>{{ movie.overview }}</p>
                             </div>
                         </div>

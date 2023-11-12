@@ -19,6 +19,9 @@ class Favorite
     #[ORM\Column(nullable: true)]
     private ?int $idSerie = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $title = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -43,6 +46,18 @@ class Favorite
     public function setIdSerie(?int $idSerie): static
     {
         $this->idSerie = $idSerie;
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): static
+    {
+        $this->title = $title;
+
         return $this;
     }
 }

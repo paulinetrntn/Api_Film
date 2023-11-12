@@ -10,7 +10,9 @@
                         <div class="card mb-4">
                             <img src="https://image.tmdb.org/t/p/original{{ serie.poster_path }}" alt="{{ serie.name }}">
                             <div class="card-title-overlay">
-                                <h5 class="card-title">{{ serie.name }}</h5>
+                                <a class="text-decoration-none" href="{{ path('serie_details', {'id': serie.id }) }}">
+                                    <h5 class="card-title text-center custom-title">{{ serie.name }}</h5>
+                                </a>
                                 <p>{{ serie.overview }}</p>
                             </div>
                         </div>

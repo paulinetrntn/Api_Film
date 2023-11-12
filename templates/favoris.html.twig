@@ -9,6 +9,7 @@
                 <th>id</th>
                 <th>ID Film</th>
                 <th>ID Serie</th>
+                <th>Titre</th>
             </tr>
             </thead>
             {% for favori in favoris %}
@@ -16,6 +17,7 @@
                     <td>{{ favori.id }}</td>
                     <td>{{ favori.idMovie }} </td>
                     <td>{{ favori.idSerie }} </td>
+                    <td>{{ favori.title }} </td>
                 </tr>
             {% endfor %}
         </table>
