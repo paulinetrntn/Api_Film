@@ -1,21 +1,23 @@
-{% extends 'base.html.twig' %}
-
 {% block body %}
-<!--
+
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <p><a class="text-white text-decoration-none" href="{{ path('app_home')}}">Retour au menu</a></p>
+
     <div class="form-wrapper">
         <h1>Connectez vous</h1>
         <form action="{{ path('app_login') }}" method="post">
             <div class="form-item">
-                <label for="email"></label>
-                <input type="text" id="username" name="_username" value="{{ last_username|default('') }}" class="form-control" placeholder="Email" required autofocus>
-
+                <label for="username"></label>
+                <input type="text" id="username" name="_username" value="{{ last_username}}" placeholder="test@gmail.com">
             </div>
             <div class="form-item">
                 <label for="password"></label>
-                <input type="password" name="mdp" required="required" placeholder="Mot de passe"></input>
+                <input type="password" id="password" name="_password" required="required" placeholder="Mot de passe"></input>
                 <input type="hidden" name="_csrf_token"
-                       value="{{ csrf_token('authenticate') }}"
-                >
+                       value="{{ csrf_token('authenticate') }}">
             </div>
             <div class="button-panel">
                 <button type="submit" class="button" title="Sign In" value="Sign In">Se connecter</button>
@@ -23,29 +25,8 @@
         </form>
         <div class="form-footer">
             <p><a href="{{ path('app_register')}}">Créer un compte</a></p>
-
         </div>
     </div>
--->
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-
-    <form action="{{ path('app_login') }}" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}">
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password">
-
-        <input type="hidden" name="_csrf_token"
-               value="{{ csrf_token('authenticate') }}"
-        >
-
-        <button type="submit">login</button>
-    </form>
-    <a href="{{ path('app_register')}}">Créer un compte</a>
 
 {% endblock %}
 
@@ -60,7 +41,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-        background: #e9e9e9;
+        background-color: #343a40;
         color: #5e5e5e;
         font: 400 87.5%/1.5em 'Open Sans', sans-serif;
     }
