@@ -7,6 +7,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/fav')]
@@ -18,6 +22,12 @@ class FavorisController extends AbstractController{
     #[Route('/all','all')]
     public function getAllFavoris(EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
+        //$favoris =$entityManager->getRepository(Favorite::class)->findBy(['user' => $user]);
+
+
         $favorisRepository = $entityManager->getRepository(Favorite::class);
         $favoris = $favorisRepository->findAll();
 
@@ -27,9 +37,18 @@ class FavorisController extends AbstractController{
         ]);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/movie/{id}', name: 'add_movie_to_favorites')]
     public function addMovieToFavorites(int $id, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
         $existingFavorite = $entityManager->getRepository(Favorite::class)->findOneBy(['idMovie' => $id]);
 
         if ($existingFavorite) {
@@ -37,33 +56,35 @@ class FavorisController extends AbstractController{
                 'confirmationMessage' => 'Le film avec l\'ID ' . $id . ' est déjà dans vos favoris !',
             ]);
         }
-        else{
-            $response = $this->tmbdClient->request(
-                'GET',
-                '/3/movie/' . $id
-            );
 
-            $data = json_decode($response->getContent(), true);
+        $response = $this->tmbdClient->request(
+            'GET',
+            '/3/movie/' . $id
+        );
 
-            if (isset($data['title'])) {
-                $title = $data['title'];
+        $data = json_decode($response->getContent(), true);
 
-                $favorite = new Favorite();
-                $favorite->setIdMovie($id);
-                $favorite->setTitle($title);
+        if (isset($data['title'])) {
+            $title = $data['title'];
 
-                $entityManager->persist($favorite);
-                $entityManager->flush();
+            $favorite = new Favorite();
+            $favorite->setUser($user)
+                ->setIdMovie($id)
+                ->setTitle($title);
 
-                return $this->render('confirmation.html.twig', [
-                    'confirmationMessage' => 'Le film "' . $title . '" avec l\'ID ' . $id . ' a été ajoutée aux favoris avec succès !',
-                ]);
-            }
+            $entityManager->persist($favorite);
+            $entityManager->flush();
+
+            return $this->render('confirmation.html.twig', [
+                'confirmationMessage' => 'Le film "' . $title . '" avec l\'ID ' . $id . ' a été ajouté aux favoris avec succès !',
+            ]);
         }
+
         return $this->render('confirmation.html.twig', [
-            'confirmationMessage' => 'Le film avec l\'ID ' . $id . ' n\'a pas été trouvée !',
+            'confirmationMessage' => 'Le film avec l\'ID ' . $id . ' n\'a pas été trouvé !',
         ]);
     }
+
 
     /**
      * @throws TransportExceptionInterface
@@ -74,6 +95,9 @@ class FavorisController extends AbstractController{
     #[Route('/serie/{id}', name: 'add_serie_to_favorites')]
     public function addSerieToFavorites(int $id, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
         $existingFavorite = $entityManager->getRepository(Favorite::class)->findOneBy(['idSerie' => $id]);
 
         if ($existingFavorite) {
@@ -94,6 +118,7 @@ class FavorisController extends AbstractController{
 
                 $favorite = new Favorite();
                 $favorite->setIdSerie($id);
+                $favorite->setUser($user);
                 $favorite->setTitle($title);
 
                 $entityManager->persist($favorite);
@@ -109,9 +134,11 @@ class FavorisController extends AbstractController{
         ]);
     }
 
+
     #[Route('/fav', name: 'favors')]
     public function Favorites(): Response
     {
         return $this->render('favoris.html.twig');
     }
+
 }

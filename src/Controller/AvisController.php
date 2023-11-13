@@ -23,9 +23,13 @@ class AvisController extends AbstractController
     #[Route('/addavisserie/{id}', name: 'ajouter_avis_serie')]
     public function ajouterAvisSerie(int $id, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
         $avis = new Avis();
         $avis->setDate(new \DateTime());
         $avis->setIdSerie($id);
+        $avis->setUser($user);
 
         $form = $this->createForm(AvisFormType::class, $avis);
         $form->handleRequest($request);
@@ -47,9 +51,13 @@ class AvisController extends AbstractController
     #[Route('/addavisfilm/{id}', name: 'ajouter_avis_film')]
     public function ajouterAvisFilm(int $id, Request $request): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+
         $avis = new Avis();
         $avis->setDate(new \DateTime());
         $avis->setIdMovie($id);
+        $avis->setUser($user);
 
         $form = $this->createForm(AvisFormType::class, $avis);
         $form->handleRequest($request);
